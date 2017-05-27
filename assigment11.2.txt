@@ -1,0 +1,19 @@
+1)select c1.customer_id,c1.first_name,sum(c2.amount) from customer c1,payment c2,rental c3
+
+where c1.customer_id = c3.customer_id
+
+and c3.customer_id = c2.customer_id group by c1.customer_id,c1.first_name
+
+order by sum(c2.amount) desc limit 1;
+
+2)SELECT CONCAT(customer.last_name, ', ', customer.first_name) AS customer,
+    address.phone, film.title
+    FROM rental INNER JOIN customer ON rental.customer_id = customer.customer_id
+    INNER JOIN address ON customer.address_id = address.address_id
+    INNER JOIN inventory ON rental.inventory_id = inventory.inventory_id
+    INNER JOIN film ON inventory.film_id = film.film_id
+    WHERE rental.return_date IS NULL
+    AND rental_date + INTERVAL film.rental_duration DAY < CURRENT_DATE()
+    LIMIT 5;
+ 
+EXPLANATION:-To create such a list, search the rental table for films with a return date that is NULL and where the rental date is further in the past than the rental duration specified in the film table. If so, the film is overdue and we should produce the name of the film along with the customer name and phone number.
